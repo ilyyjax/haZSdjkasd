@@ -1,0 +1,163 @@
+:root{
+  --bg-dark: #0b0c0f;
+  --gold-1: #f6d365;
+  --gold-2: #f6b73c;
+  --gold-3: #b98b2f;
+  --ease-smooth: cubic-bezier(.22,.9,.36,1);
+  --transition-fast: 260ms var(--ease-smooth);
+  --transition-medium: 480ms var(--ease-smooth);
+  --glow-color: rgba(255, 200, 80, 0.5);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background: var(--bg-dark);
+  color:#fff;
+  overflow:hidden;
+}
+
+/* Center stage */
+.stage{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  position:relative;
+  z-index:1;
+  text-align:center;
+}
+
+/* Hint text */
+.hint{
+  color:#aaa;
+  font-size:clamp(12px,2vw,14px);
+  opacity:0.8;
+  margin:0;
+}
+
+/* Subtle moving gradient background */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: radial-gradient(circle at 20% 40%, #111 0%, #000 60%) no-repeat;
+  background-size:200% 200%;
+  animation:bgMove 20s ease-in-out infinite alternate;
+  z-index:0;
+}
+@keyframes bgMove {
+  0%{background-position:0% 50%;}
+  100%{background-position:100% 50%;}
+}
+@media (prefers-reduced-motion: reduce){
+  body::before{animation:none;}
+}
+
+/* =======================
+   GOLDEN HEADLINE
+   ======================= */
+.gold-btn{
+  font-weight:700;
+  font-size:clamp(36px,10vw,96px);
+  background:linear-gradient(90deg,var(--gold-3),var(--gold-2),#fff9d6,var(--gold-1),var(--gold-3));
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  -webkit-text-fill-color:transparent;
+  text-shadow:0 0 20px var(--glow-color),0 0 40px rgba(255,180,50,0.3);
+  border:none;
+  cursor:pointer;
+  padding:20px 60px;
+  border-radius:12px;
+  position:relative;
+  z-index:2;
+  animation:float 4s ease-in-out infinite, shimmer 5s linear infinite;
+  transition:transform var(--transition-fast), text-shadow var(--transition-fast);
+}
+
+/* Floating animation */
+@keyframes float {
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-12px);}
+}
+
+/* Subtle gradient shimmer animation */
+@keyframes shimmer {
+  0%{background-position:0% 50%;}
+  100%{background-position:100% 50%;}
+}
+
+/* Hover/focus intensifies glow */
+.gold-btn:hover,
+.gold-btn:focus{
+  outline:none;
+  text-shadow:0 0 25px rgba(255,210,100,0.9),0 0 60px rgba(255,180,50,0.6);
+  transform:translateY(-5px) scale(1.02);
+}
+
+/* Pressed state */
+.gold-btn:active{
+  transform:translateY(0) scale(0.98);
+  transition:transform 120ms ease-out;
+}
+
+/* Disable motion for prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce){
+  .gold-btn{animation:none;}
+}
+
+/* =======================
+   WHITE SCREEN TRANSITION
+   ======================= */
+.white-overlay{
+  position:fixed;
+  inset:0;
+  background:#fff;
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  z-index:50;
+  transition:opacity var(--transition-medium),visibility var(--transition-medium);
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:18px;
+}
+body.is-white .white-overlay{
+  opacity:1;
+  visibility:visible;
+  pointer-events:auto;
+}
+
+/* Hide original content when white active */
+body.is-white .stage{
+  opacity:0;
+  transform:scale(0.98);
+  transition:opacity var(--transition-medium),transform var(--transition-medium);
+  pointer-events:none;
+}
+
+/* Back button */
+.back-btn{
+  background:transparent;
+  border:none;
+  color:#111;
+  font-weight:600;
+  font-size:16px;
+  padding:8px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  opacity:0.9;
+  transition:background var(--transition-fast),transform var(--transition-fast);
+}
+.back-btn:hover,.back-btn:focus{
+  background:rgba(0,0,0,0.05);
+  transform:translateY(-1px);
+}
+.back-btn[aria-hidden="true"]{display:none;}
